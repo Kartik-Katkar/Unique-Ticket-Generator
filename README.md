@@ -3,6 +3,12 @@
 Description:
 The Online Unique Ticket Generator and Printing System is a web-based application developed using PHP and MySQL. This project offers a convenient and efficient solution for generating unique ticket numbers and allows users to print the tickets directly from an online platform. With its user-friendly interface and robust functionality, this project is ideal for organizations and businesses that require an online ticketing system.
 
+# Images
+
+<p align="center">
+  <img src="./images/Project.gif" alt="Image"/>
+</p>
+
 Key Features:
 
 Unique Ticket Generation: The project utilizes PHP and MySQL to generate unique ticket numbers for each user request. By leveraging the power of these technologies, the system ensures that each ticket number is unique and avoids any duplications or conflicts.
