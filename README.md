@@ -6,7 +6,7 @@ The Online Unique Ticket Generator and Printing System is a web-based applicatio
 # Images
 
 <p align="center">
-  <img src="./images/ticket.gif" alt="Image"/>
+  <img src="./Images/ticket.gif" alt="Image"/>
 </p>
 
 Key Features:
