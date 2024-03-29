@@ -1,0 +1,21 @@
+#	Name	Type	Collation	Attributes	Null	Default	Comments	Extra	Action
+	1	id Primary	int(11)			No	None		AUTO_INCREMENT	Change Change	Drop Drop	
+	2	username	varchar(50)	utf8mb4_general_ci		No	None			Change Change	Drop Drop	
+	3	password	varchar(255)	utf8mb4_general_ci		No	None			Change Change	Drop Drop	
+	4	created_at	datetime			No	current_timestamp()			Change Change	Drop Drop	
+	5	city	varchar(100)	utf8mb4_general_ci		Yes	NULL			Change Change	Drop Drop	
+	6	referral	varchar(100)	utf8mb4_general_ci		Yes	NULL			Change Change	Drop Drop	
+	7	event	varchar(100)	utf8mb4_general_ci		No	Codeflix			Change Change	Drop Drop	
+
+
+SQL COMMAND
+
+CREATE TABLE YourTableName (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    city VARCHAR(100),
+    referral VARCHAR(100),
+    event VARCHAR(100) NOT NULL DEFAULT 'Codeflix'
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
