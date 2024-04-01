@@ -35,9 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 echo "Something went wrong";
             }
         }
+        mysqli_stmt_close($stmt);
     }
 
-    mysqli_stmt_close($stmt);
+    
+
     
     // Check for city
 if(empty(trim($_POST['city']))){
@@ -111,7 +113,7 @@ if(empty($username_err) && empty($password_err) && empty($confirm_password_err) 
     mysqli_stmt_close($stmt);
 }
     mysqli_close($conn);
-    }
+}
 
     
 
@@ -284,7 +286,7 @@ if(empty($username_err) && empty($password_err) && empty($confirm_password_err) 
     <select class="form-select" name="referral">
         <option selected disabled>Select Referral</option>
         <option value="Vedant">Vedant</option>
-        <option value="Sakshi">Sakshi</option>
+        <option value="Ajay">Ajay</option>
         <option value="Brochure">Brochure</option>
         <option value="TV ad">TV ad</option>
         <option value="Other">Other</option>

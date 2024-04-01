@@ -1,19 +1,56 @@
+<!-- added  -->
 <?php
-
 session_start();
 
-if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
-{
+// Include config.php to access database credentials
+include_once 'config.php';
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: login.php");
+    exit; // Stop further execution
 }
 
 $uid1 = strtoupper(substr($_SESSION['username'], 0, 1));
 $uid2 = $_SESSION['id'] + 9732;
-// $uid3 = strtoupper(substr($_SESSION['college'], 0, 2));
-// $finaluid = $uid1.$uid2.$uid3;
-$finaluid = $uid1.$uid2;
+$finaluid = $uid1 . $uid2;
 
-$validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_SESSION['id']?>
+$validationtext = "Authentic Ticket For " . $_SESSION['username'] . " ID number " . $_SESSION['id'];
+
+// Create a database connection
+$conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+// Check connection
+if ($conn === false) {
+    die('Error: Cannot connect to the database');
+}
+
+// Prepare and execute SQL query to fetch city and event details based on user ID
+$sql = "SELECT city, event FROM users WHERE id = " . $_SESSION['id'];
+$result = mysqli_query($conn, $sql);
+
+$city = '';
+$event = '';
+
+// Check if the query executed successfully
+if ($result !== false) {
+    // Check if records are found
+    if (mysqli_num_rows($result) > 0) {
+        // Fetch city and event details
+        $row = mysqli_fetch_assoc($result);
+        $city = $row['city'];
+        $event = $row['event'];
+    } else {
+        echo "No records found for the user.";
+    }
+} else {
+    // Display error if query execution fails
+    echo "Error: " . mysqli_error($conn);
+}
+
+mysqli_close($conn);
+?>
+
+<!-- added  -->
 
 
 <!doctype html>
@@ -41,9 +78,9 @@ $validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_
 
 <body>
 
-
+<!-- CREATE YOUR OWN FROM CONFERBOT WEBISITE -->
     <!--Start of Conferbot Script-->
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
       (function (d, s, id) {
         var js, el = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -54,10 +91,10 @@ $validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_
         js.charset = 'UTF-8';
         el.parentNode.insertBefore(js, el);
         js.onload = function () {
-          var w = window.ConferbotWidget("65ea1ca9b2b70143876783b3", "live_chat");
+          var w = window.ConferbotWidget("YOUR_API_NUMBER", "live_chat");
         };
       })(document, 'script', 'conferbot-js');
-    </script>
+    </script> -->
     <!--End of Conferbot Script-->
   
 
@@ -105,6 +142,7 @@ $validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         }
+        
     </style>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -159,9 +197,69 @@ $validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_
     <br>
     <br>
     <hr>
-    <div class="container mt-4 text-center">
-        <h3><?php echo "Welcome ". $_SESSION['username']?> Here is your Ticket</h3>
-        
+    <h3><div class="container mt-4 text-center" id="generated-text"></h3>
+
+<!-- start  -->
+
+<!-- <body> -->
+  <!-- <pre id="generated-text"></pre> -->
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    // Replace "... with your actual API key from Google AI Studio
+    const API_KEY = "YOUR_API_KEY_HERE";
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    const generateButton = document.getElementById("generate-button");
+    const promptInput = document.getElementById("prompt-input");
+    const generatedText = document.getElementById("generated-text");
+
+    async function generateText() {
+    //   const prompt = promptInput.value;
+    const prompt = "Give a warm greeting message to <?php echo $_SESSION['username'] ?> who is from <?php echo $city ?>
+        participating in the <?php echo $event ?> hackathon. Also, add emojis and hashtags."
+
+      // For text-only input, use the gemini-pro model
+      const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+
+    //   const generationConfig = {
+    //     stopSequences: ["red"], // Stop generation when "red" is encountered
+    //     maxOutputTokens: 200,  // Maximum number of tokens to generate
+    //     temperature: 0.9,       // Controls randomness (higher = more creative)
+    //     topP: 0.1,              // Probability distribution for next word selection
+    //     topK: 16,               // Consider the top 16 most likely words
+    //   };
+
+      const generationConfig = {
+      temperature: 0.9,
+      topK: 1,
+      topP: 1,
+      maxOutputTokens: 2048,
+    };
+
+      const modelWithConfig = genAI.getGenerativeModel({ model: "gemini-1.0-pro", generationConfig });
+
+      const result = await modelWithConfig.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      generatedText.innerText = text;
+    }
+
+    // generateButton.addEventListener("click", generateText);
+    generateText();
+  </script>
+<!-- </body> -->
+
+<!-- end  -->
     </div>
     <hr>
     <div class="container pt-xl-5 pb-xl-5 text-center printelem">
@@ -174,6 +272,7 @@ $validationtext = "Authentic Ticket For ".$_SESSION['username']." ID number ".$_
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 201.6"
                 style="enable-background:new 0 0 612 201.6;" xml:space="preserve">
                 <style type="text/css">
+                    
                 .st0 {
                     fill: none;
                 }

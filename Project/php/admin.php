@@ -22,17 +22,18 @@ function getAllUsers($conn) {
 }
 
 // Function to create a new user
-function createUser($conn, $username, $password) {
+function createUser($conn, $username, $password, $city, $referral, $event) {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    $sql = "INSERT INTO users (username, password, city, referral, event) VALUES (?, ?, ?, ?, ?)"; // Include event in the query
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ss", $username, $hashed_password);
+    mysqli_stmt_bind_param($stmt, "sssss", $username, $hashed_password, $city, $referral, $event); // Bind parameters for event
     if (mysqli_stmt_execute($stmt)) {
         return true;
     } else {
         return false;
     }
 }
+
 
 // Function to update user details
 function updateUser($conn, $userId, $newUsername) {
@@ -63,18 +64,22 @@ $users = getAllUsers($conn);
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['create_user'])) {
-        $newUsername = $_POST['new_username'];
-        $newPassword = $_POST['new_password'];
-        if (createUser($conn, $newUsername, $newPassword)) {
-            // User created successfully
-            header("Location: admin.php");
-            exit;
-        } else {
-            // Error creating user
-            $errorMessage = "Error creating user.";
+        if (isset($_POST['create_user'])) {
+            $newUsername = $_POST['new_username'];
+            $newPassword = $_POST['new_password'];
+            $city = $_POST['city']; // Capture city value
+            $referral = $_POST['referral']; // Capture referral value
+            $event = $_POST['event']; // Capture event value
+            if (createUser($conn, $newUsername, $newPassword, $city, $referral, $event)) { // Pass event as argument
+                // User created successfully
+                header("Location: admin.php");
+                exit;
+            } else {
+                // Error creating user
+                $errorMessage = "Error creating user.";
+            }        
         }
-    } elseif (isset($_POST['update_user'])) {
+        elseif (isset($_POST['update_user'])) {
         $userId = $_POST['user_id'];
         $newUsername = $_POST['username'];
         if (updateUser($conn, $userId, $newUsername)) {
@@ -284,6 +289,22 @@ mysqli_free_result($result);
                 <label for="new_password">Password:</label>
                 <input type="password" class="form-control" id="new_password" name="new_password" required>
             </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" class="form-control" id="city" name="city">
+            </div>
+
+            <div class="form-group">
+                <label for="referral">Referral:</label>
+                <input type="text" class="form-control" id="referral" name="referral">
+            </div>
+
+            <div class="form-group">
+                <label for="event">Event:</label>
+                <input type="text" class="form-control" id="event" name="event" value="Codeflix">
+            </div>
+
+
             <button type="submit" class="btn btn-primary" name="create_user">Create User</button>
         </form>
         </div>

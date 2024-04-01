@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                         $_SESSION["loggedin"] = true;
 
                         //Redirect user to welcome page
-                        if ($username == "admin" && $password == "Admin@12") {
+                        if ($username == "YOUR_ADMIN_USERNAME" && $password == "YOUR_ADMIN_PASSWORD") {
                             header("location: admin.php");
                         } else {
                             header("location: welcome.php");
