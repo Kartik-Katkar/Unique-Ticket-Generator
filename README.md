@@ -73,4 +73,8 @@ ALTER TABLE `users` ADD `reset_token_hash` VARCHAR(64) NULL AFTER `event`, ADD `
 ALTER TABLE `users` ADD `email` INT(255) NOT NULL AFTER `password`;
 ```
 
+```sql
+ALTER TABLE `users` CHANGE `email` `email` VARCHAR(255) NOT NULL;
+```
+
 The Online Unique Ticket Generator and Printing System with User Authentication and Chatbot Support provides organizations with an all-in-one solution for ticket generation, user authentication, and customer support. By leveraging PHP, MySQL, and advanced features such as chatbot support and explainable AI, this project simplifies ticketing processes while enhancing security and user experience. Streamline your ticketing operations and provide exceptional customer service with this comprehensive online application today!
