@@ -65,4 +65,8 @@ CREATE TABLE eventdata (
 
 ```
 
+```sql
+ALTER TABLE `users` ADD `reset_token_hash` VARCHAR(64) NULL AFTER `event`, ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`;
+```
+
 The Online Unique Ticket Generator and Printing System with User Authentication and Chatbot Support provides organizations with an all-in-one solution for ticket generation, user authentication, and customer support. By leveraging PHP, MySQL, and advanced features such as chatbot support and explainable AI, this project simplifies ticketing processes while enhancing security and user experience. Streamline your ticketing operations and provide exceptional customer service with this comprehensive online application today!
