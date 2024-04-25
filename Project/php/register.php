@@ -49,17 +49,17 @@ if(empty(trim($_POST['city']))){
 }
 
 // Check for referral
-if(empty(trim($_POST['referral']))){
-    $referral_err = "Referral cannot be blank";
-} else {
+if(isset($_POST['referral']) && !empty(trim($_POST['referral']))){
     $referral = trim($_POST['referral']);
+} else {
+    $referral_err = "Referral cannot be blank";
 }
 
 // Check for event
-if(empty(trim($_POST['event']))){
-    $event_err = "Event cannot be blank";
-} else {
+if(isset($_POST['event']) && !empty(trim($_POST['event']))){
     $event = trim($_POST['event']);
+} else {
+    $event_err = "Event cannot be blank";
 }
 
     // Check for password
@@ -286,7 +286,7 @@ if(empty($username_err) && empty($password_err) && empty($confirm_password_err) 
     <select class="form-select" name="referral">
         <option selected disabled>Select Referral</option>
         <option value="Vedant">Vedant</option>
-        <option value="Ajay">Ajay</option>
+        <option value="Sakshi">Sakshi</option>
         <option value="Brochure">Brochure</option>
         <option value="TV ad">TV ad</option>
         <option value="Other">Other</option>

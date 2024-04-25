@@ -7,7 +7,7 @@ include_once 'config.php';
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: login.php");
-    exit; // Stop further execution
+    exit;
 }
 
 $uid1 = strtoupper(substr($_SESSION['username'], 0, 1));
@@ -23,15 +23,12 @@ $conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if ($conn === false) {
     die('Error: Cannot connect to the database');
 }
-
-// Prepare and execute SQL query to fetch city and event details based on user ID
 $sql = "SELECT city, event FROM users WHERE id = " . $_SESSION['id'];
 $result = mysqli_query($conn, $sql);
 
 $city = '';
 $event = '';
 
-// Check if the query executed successfully
 if ($result !== false) {
     // Check if records are found
     if (mysqli_num_rows($result) > 0) {
@@ -46,6 +43,30 @@ if ($result !== false) {
     // Display error if query execution fails
     echo "Error: " . mysqli_error($conn);
 }
+
+// Prepare and execute SQL query to fetch event details based on event name
+$sql = "SELECT date, time FROM eventdata WHERE name = '$event'";
+$result = mysqli_query($conn, $sql);
+
+$eventDate = '';
+$eventTime = '';
+
+// Check if the query executed successfully
+if ($result !== false) {
+    // Check if records are found
+    if (mysqli_num_rows($result) > 0) {
+        // Fetch event date and time
+        $row = mysqli_fetch_assoc($result);
+        $eventDate = $row['date'];
+        $eventTime = $row['time'];
+    } else {
+        echo "No records found for the event.";
+    }
+} else {
+    // Display error if query execution fails
+    echo "Error: " . mysqli_error($conn);
+}
+
 
 mysqli_close($conn);
 ?>
@@ -78,9 +99,9 @@ mysqli_close($conn);
 
 <body>
 
-<!-- CREATE YOUR OWN FROM CONFERBOT WEBISITE -->
+
     <!--Start of Conferbot Script-->
-    <!-- <script type="text/javascript">
+    <script type="text/javascript">
       (function (d, s, id) {
         var js, el = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -91,10 +112,10 @@ mysqli_close($conn);
         js.charset = 'UTF-8';
         el.parentNode.insertBefore(js, el);
         js.onload = function () {
-          var w = window.ConferbotWidget("YOUR_API_NUMBER", "live_chat");
+          var w = window.ConferbotWidget("65ea1ca9b2b70143876783b3", "live_chat");
         };
       })(document, 'script', 'conferbot-js');
-    </script> -->
+    </script>
     <!--End of Conferbot Script-->
   
 
@@ -202,7 +223,6 @@ mysqli_close($conn);
 <!-- start  -->
 
 <!-- <body> -->
-  <!-- <pre id="generated-text"></pre> -->
 
   <script type="importmap">
     {
@@ -215,7 +235,7 @@ mysqli_close($conn);
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
     // Replace "... with your actual API key from Google AI Studio
-    const API_KEY = "YOUR_API_KEY_HERE";
+    const API_KEY = "AIzaSyAumIRKhFyHl47hcBpBUn_4OnorT_nY0qo";
 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -230,14 +250,6 @@ mysqli_close($conn);
 
       // For text-only input, use the gemini-pro model
       const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
-
-    //   const generationConfig = {
-    //     stopSequences: ["red"], // Stop generation when "red" is encountered
-    //     maxOutputTokens: 200,  // Maximum number of tokens to generate
-    //     temperature: 0.9,       // Controls randomness (higher = more creative)
-    //     topP: 0.1,              // Probability distribution for next word selection
-    //     topK: 16,               // Consider the top 16 most likely words
-    //   };
 
       const generationConfig = {
       temperature: 0.9,
@@ -254,7 +266,6 @@ mysqli_close($conn);
       generatedText.innerText = text;
     }
 
-    // generateButton.addEventListener("click", generateText);
     generateText();
   </script>
 <!-- </body> -->
@@ -332,9 +343,11 @@ mysqli_close($conn);
                 <rect x="205.5" y="77.5" class="st0" width="209" height="28.8" />
                 <!-- <text transform="matrix(1 0 0 1 205.48 104.377)" class="st6 st2 st7">Hackathon</text> -->
                 <rect x="207.8" y="120.6" class="st8" width="181.4" height="1.6" />
-                <text transform="matrix(1 0 0 1 207.7508 138.5189)" class="st1 st2 st9">NOVEMBER 2, 2024</text>
+                <!-- <text transform="matrix(1 0 0 1 207.7508 138.5189)" class="st1 st2 st9">NOVEMBER 2, 2024</text> -->
+                <text transform="matrix(1 0 0 1 207.7508 138.5189)" class="st1 st2 st9"><?php echo $eventDate ?></text>
                 <text transform="matrix(1 0 0 1 290.1673 138.5186)" class="st1 st2 st9">SHARAD ARENA</text>
-                <text transform="matrix(1 0 0 1 356.3345 138.5187)" class="st1 st2 st9">3- 5 PM</text>
+                <!-- <text transform="matrix(1 0 0 1 356.3345 138.5187)" class="st1 st2 st9">3- 5 PM</text> -->
+                <text transform="matrix(1 0 0 1 356.3345 138.5187)" class="st1 st2 st9"><?php echo $eventTime ?></text>
                 <text transform="matrix(0 -0.7237 1 0 557.3142 194.3068)" class="stt1 st2 st10">TICKET ID :
                     <?php echo $finaluid?></text>
                 <image style="overflow:visible;" width="300" height="304" xlink:href="../images/logof.png"

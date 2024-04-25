@@ -59,6 +59,88 @@ function deleteUser($conn, $userId) {
     }
 }
 
+// Function to create a new event
+function createEvent($conn, $name, $date, $time, $price) {
+    $sql = "INSERT INTO eventdata (name, date, time, price) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "sssi", $name, $date, $time, $price);
+    if (mysqli_stmt_execute($stmt)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Function to update event details
+function updateEvent($conn, $eventId, $name, $date, $time, $price) {
+    $sql = "UPDATE eventdata SET name = ?, date = ?, time = ?, price = ? WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "sssii", $name, $date, $time, $price, $eventId);
+    if (mysqli_stmt_execute($stmt)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Function to delete an event
+function deleteEvent($conn, $eventId) {
+    $sql = "DELETE FROM eventdata WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $eventId);
+    if (mysqli_stmt_execute($stmt)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Fetch all events
+function getAllEvents($conn) {
+    $events = array();
+    $sql = "SELECT id, name FROM eventdata";
+    $result = mysqli_query($conn, $sql);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $events[] = $row;
+    }
+    return $events;
+}
+
+// Fetch all events
+$events = getAllEvents($conn);
+
+// Handle form submissions for events
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['create_event'])) {
+        // Code to create event (already present)
+    } elseif (isset($_POST['update_event'])) {
+        $eventId = $_POST['event_id'];
+        $eventName = $_POST['updated_event_name'];
+        $eventDate = $_POST['updated_event_date'];
+        $eventTime = $_POST['updated_event_time'];
+        $eventPrice = $_POST['updated_event_price'];
+        if (updateEvent($conn, $eventId, $eventName, $eventDate, $eventTime, $eventPrice)) {
+            // Event updated successfully
+            header("Location: admin.php");
+            exit;
+        } else {
+            // Error updating event
+            $errorMessage = "Error updating event.";
+        }
+    } elseif (isset($_POST['delete_event'])) {
+        $eventId = $_POST['event_id_delete'];
+        if (deleteEvent($conn, $eventId)) {
+            // Event deleted successfully
+            header("Location: admin.php");
+            exit;
+        } else {
+            // Error deleting event
+            $errorMessage = "Error deleting event.";
+        }
+    }
+}
+
+
 // Fetch all users
 $users = getAllUsers($conn);
 
@@ -184,15 +266,13 @@ mysqli_free_result($result);
         body {
         background-image: url('../images/bg.png');
         background-repeat: no-repeat;
-        background-attachment: fixed; /* Keeps the background image fixed while scrolling */
-        background-size: cover; /* Ensures the background image covers the entire viewport */
+        background-attachment: fixed;
+        background-size: cover;
     }
         .navbar {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             }
-
-            /* for forms glassmorphism  */
 
                 /* Glassmorphism effect */
     .glassmorphism {
@@ -343,7 +423,82 @@ mysqli_free_result($result);
             </div>
             <button type="submit" class="btn btn-danger" name="delete_user">Delete User</button>
         </form>
+        
         </div>
+
+        <div class="glassmorphism">
+    <h3>Create New Event</h3>
+    <form method="post" action="">
+        <div class="form-group">
+            <label for="event_name">Event Name:</label>
+            <input type="text" class="form-control" id="event_name" name="event_name" required>
+        </div>
+        <div class="form-group">
+            <label for="event_date">Event Date:</label>
+            <input type="date" class="form-control" id="event_date" name="event_date" required>
+        </div>
+        <div class="form-group">
+            <label for="event_time">Event Time:</label>
+            <input type="time" class="form-control" id="event_time" name="event_time" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="event_price">Event Price:</label>
+            <input type="number" class="form-control" id="event_price" name="event_price" required>
+        </div>
+        <button type="submit" class="btn btn-primary" name="create_event">Create Event</button>
+    </form>
+</div>
+
+<div class="glassmorphism">
+    <h3>Update Event</h3>
+    <form method="post" action="">
+    <div class="form-group">
+    <label for="event_id">Select Event:</label>
+    <select class="form-control" id="event_id" name="event_id">
+        <?php foreach ($events as $event) : ?>
+            <option value="<?php echo $event['id']; ?>"><?php echo $event['name']; ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
+        <div class="form-group">
+            <label for="updated_event_name">New Event Name:</label>
+            <input type="text" class="form-control" id="updated_event_name" name="updated_event_name" required>
+        </div>
+        <div class="form-group">
+            <label for="updated_event_date">New Event Date:</label>
+            <input type="date" class="form-control" id="updated_event_date" name="updated_event_date" required>
+        </div>
+        <div class="form-group">
+            <label for="updated_event_time">New Event Time:</label>
+            <input type="time" class="form-control" id="updated_event_time" name="updated_event_time" required>
+        </div>
+        <div class="form-group">
+            <label for="updated_event_price">New Event Price:</label>
+            <input type="number" class="form-control" id="updated_event_price" name="updated_event_price" required>
+        </div>
+        <button type="submit" class="btn btn-primary" name="update_event">Update Event</button>
+    </form>
+</div>
+
+
+<div class="glassmorphism">
+    <h3>Delete Event</h3>
+    <form method="post" action="">
+        <div class="form-group">
+            <label for="event_id_delete">Select Event:</label>
+            <select class="form-control" id="event_id_delete" name="event_id_delete">
+                <?php foreach ($events as $event) : ?>
+                    <option value="<?php echo $event['id']; ?>"><?php echo $event['name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-danger" name="delete_event">Delete Event</button>
+    </form>
+    
+</div>
+
 
         <?php if (isset($errorMessage)) : ?>
             <div class="alert alert-danger mt-3" role="alert">
@@ -357,6 +512,7 @@ mysqli_free_result($result);
         <div class="glassmorphism">
 <div class="container mt-5">
     <h3>Analytics</h3>
+    
     <div>
         <h5>Number of Users Registered This Month: <?php echo $userCount; ?></h5>
     </div>
@@ -389,13 +545,59 @@ mysqli_free_result($result);
         <h5 class="text-center">Referral-wise Distribution of Registrations</h5>
         <canvas id="referralRegistrationChart" width="200" height="200"></canvas>
     </div>
+    <h3><div class="container mt-4 text-center" id="generated-text"></h3>
     </div>
 </div>
+
 </div>
         </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    // Replace "... with your actual API key from Google AI Studio
+    const API_KEY = "AIzaSyAumIRKhFyHl47hcBpBUn_4OnorT_nY0qo";
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    const generateButton = document.getElementById("generate-button");
+    const promptInput = document.getElementById("prompt-input");
+    const generatedText = document.getElementById("generated-text");
+
+    async function generateText() {
+    //   const prompt = promptInput.value;
+    const prompt = "Generate analytics based on the data collected from the database Number of Users Registered This Month: <?php echo $userCount; ?>. Include the following:Provide insights on ticket sales based on factors like current temperature, city, time of the day, etc Analyze the impact of variables such as city, time of the day, and weather conditions on ticket purchases.Offer recommendations for optimizing ticket sales based on the identified patterns. give a simple summary in one paragraph"
+
+      // For text-only input, use the gemini-pro model
+      const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+
+      const generationConfig = {
+      temperature: 0.9,
+      topK: 1,
+      topP: 1,
+      maxOutputTokens: 2048,
+    };
+
+      const modelWithConfig = genAI.getGenerativeModel({ model: "gemini-1.0-pro", generationConfig });
+
+      const result = await modelWithConfig.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      generatedText.innerText = text;
+    }
+    generateText();
+  </script>
 <script>
+
+    
     // JavaScript code to render the time of day chart
     var ctx1 = document.getElementById('registrationTimeChart').getContext('2d');
     var registrationTimeChart = new Chart(ctx1, {

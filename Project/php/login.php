@@ -1,14 +1,16 @@
 <?php
-//This script will handle login
 session_start();
 
-// check if the user is already logged in
 if(isset($_SESSION['username']))
 {
     header("location: welcome.php");
     exit;
 }
 require_once "config.php";
+
+if (!$conn) {
+    $err = "Connection failed: " . mysqli_connect_error();
+}
 
 $username = $password = "";
 $err = "";
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                         $_SESSION["loggedin"] = true;
 
                         //Redirect user to welcome page
-                        if ($username == "YOUR_ADMIN_USERNAME" && $password == "YOUR_ADMIN_PASSWORD") {
+                        if ($username == "admin" && $password == "Admin@12") {
                             header("location: admin.php");
                         } else {
                             header("location: welcome.php");
@@ -113,26 +115,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="register.php">Register</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="login.php">Login</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
-                </li> -->
-
-
-
             </ul>
         </div>
     </nav>
 
-    <!-- start login  -->
-    <!-- Section: Design Block -->
     <section class="background-radial-gradient overflow-hidden" style="margin-top: 70px;">
         <style>
 
@@ -200,20 +191,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
 
                                 <!-- Submit button -->
                                 <button type="submit" class="btn btn-outline-dark btn-lg">Login </button>
-
                             </form>
+                            <a href="forgot_password.php">Forgot Password?</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Section: Design Block -->
-    <!-- end login  -->
-    
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
