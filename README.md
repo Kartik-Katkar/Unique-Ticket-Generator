@@ -60,14 +60,14 @@ CREATE TABLE users (
 ```
 
 ```sql
-CREATE TABLE eventdata (
-    id INT(100) AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+CREATE TABLE event (
+    id INT(100) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
-    price INT(100) NOT NULL
+    price INT(100) NOT NULL,
+    PRIMARY KEY (id)
 );
-
 ```
 
 The Online Unique Ticket Generator and Printing System with User Authentication and Chatbot Support provides organizations with an all-in-one solution for ticket generation, user authentication, and customer support. By leveraging PHP, MySQL, and advanced features such as chatbot support and explainable AI, this project simplifies ticketing processes while enhancing security and user experience. Streamline your ticketing operations and provide exceptional customer service with this comprehensive online application today!
