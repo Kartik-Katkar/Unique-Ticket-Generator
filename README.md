@@ -44,14 +44,19 @@ Key Features:
 **Database Structure (SQL Syntax):**
 ```sql
 CREATE TABLE users (
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    id INT(11) NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT current_timestamp(),
+    email VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     city VARCHAR(100),
     referral VARCHAR(100),
-    event VARCHAR(100) NOT NULL DEFAULT 'Codeflix'
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+    event VARCHAR(100) NOT NULL DEFAULT 'Codeflix',
+    reset_token_hash VARCHAR(64),
+    reset_token_expires_at DATETIME,
+    PRIMARY KEY (id),
+    INDEX (username)
+);
 ```
 
 ```sql
@@ -63,18 +68,6 @@ CREATE TABLE eventdata (
     price INT(100) NOT NULL
 );
 
-```
-
-```sql
-ALTER TABLE `users` ADD `reset_token_hash` VARCHAR(64) NULL AFTER `event`, ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`;
-```
-
-```sql
-ALTER TABLE `users` ADD `email` INT(255) NOT NULL AFTER `password`;
-```
-
-```sql
-ALTER TABLE `users` CHANGE `email` `email` VARCHAR(255) NOT NULL;
 ```
 
 The Online Unique Ticket Generator and Printing System with User Authentication and Chatbot Support provides organizations with an all-in-one solution for ticket generation, user authentication, and customer support. By leveraging PHP, MySQL, and advanced features such as chatbot support and explainable AI, this project simplifies ticketing processes while enhancing security and user experience. Streamline your ticketing operations and provide exceptional customer service with this comprehensive online application today!
