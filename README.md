@@ -1,4 +1,4 @@
-# Unique Ticket Generator and Printing System with User Authentication, Chatbot Support and Generative AI based Analytics
+# Unique Ticket Generator and Printing System with User Authentication, Chatbot Support, Generative AI based Analytics and Payment Gateway.
 
 Description:
 The Online Unique Ticket Generator and Printing System is a comprehensive web-based application developed using PHP, MySQL, and incorporating user authentication and chatbot support. This project offers a convenient and efficient solution for generating unique ticket numbers, managing user access securely, and providing customer support through a chatbot interface. With its user-friendly interface and robust functionality, this project is ideal for organizations and businesses that require an integrated online ticketing system with enhanced user authentication and support features.
