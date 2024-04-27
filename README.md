@@ -42,8 +42,9 @@ Key Features:
    - PNG format ensures tickets cannot be easily edited, maintaining the integrity of ticket information.
   
 **Requirements**
-Composer - https://getcomposer.org/download/ 
-PhPmailer - ```composer require phpmailer/phpmailer```
+- Composer - https://getcomposer.org/download/ 
+- PhPmailer - ```composer require phpmailer/phpmailer```
+- Change the required Spaces with YOUR_API_KEY for Razorpay and Gemini-Pro API
 
 **Database Structure (SQL Syntax):**
 ```sql
