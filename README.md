@@ -40,6 +40,10 @@ Key Features:
 8. **Downloadable and Uneditable PNG:**
    - Converted PNG tickets are made available for users to download, enabling offline use or sharing.
    - PNG format ensures tickets cannot be easily edited, maintaining the integrity of ticket information.
+  
+**Requirements**
+Composer - https://getcomposer.org/download/ 
+PhPmailer - ```composer require phpmailer/phpmailer```
 
 **Database Structure (SQL Syntax):**
 ```sql
