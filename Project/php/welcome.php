@@ -101,21 +101,7 @@ mysqli_close($conn);
 
 
     <!--Start of Conferbot Script-->
-    <script type="text/javascript">
-      (function (d, s, id) {
-        var js, el = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s);
-        js.async = true;
-        js.src = 'https://s3.ap-south-1.amazonaws.com/conferbot.defaults/dist/v1/widget.min.js';
-        js.id = id;
-        js.charset = 'UTF-8';
-        el.parentNode.insertBefore(js, el);
-        js.onload = function () {
-          var w = window.ConferbotWidget("65ea1ca9b2b70143876783b3", "live_chat");
-        };
-      })(document, 'script', 'conferbot-js');
-    </script>
+  <!-- You can add this script to your website to enable conferbot chatbot -->
     <!--End of Conferbot Script-->
   
 
@@ -235,7 +221,7 @@ mysqli_close($conn);
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
     // Replace "... with your actual API key from Google AI Studio
-    const API_KEY = "AIzaSyAumIRKhFyHl47hcBpBUn_4OnorT_nY0qo";
+    const API_KEY = "YOUR_API_KEY_HERE";
 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -244,7 +230,6 @@ mysqli_close($conn);
     const generatedText = document.getElementById("generated-text");
 
     async function generateText() {
-    //   const prompt = promptInput.value;
     const prompt = "Give a warm greeting message to <?php echo $_SESSION['username'] ?> who is from <?php echo $city ?>
         participating in the <?php echo $event ?> hackathon. Also, add emojis and hashtags."
 
@@ -263,7 +248,8 @@ mysqli_close($conn);
       const result = await modelWithConfig.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      generatedText.innerText = text;
+      const textWostars = text.replace(/\*/g, ' ');
+      generatedText.innerText = textWostars;
     }
 
     generateText();
@@ -277,7 +263,6 @@ mysqli_close($conn);
         <div class="row pt-xl-5 pb-xl-5">
             
             <!-- <div id = "svg-container"> -->
-            <?xml version="1.0" encoding="utf-8"?>
             <!-- Generator: Adobe Illustrator 26.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 201.6"
@@ -341,12 +326,11 @@ mysqli_close($conn);
                 <rect x="490.4" class="st4" width="121.6" height="201.6" />
                 <text transform="matrix(1 0 0 1 207.7599 104.377)" class="st1 st2 st3">Largest Hackathon</text>
                 <rect x="205.5" y="77.5" class="st0" width="209" height="28.8" />
-                <!-- <text transform="matrix(1 0 0 1 205.48 104.377)" class="st6 st2 st7">Hackathon</text> -->
+                
                 <rect x="207.8" y="120.6" class="st8" width="181.4" height="1.6" />
-                <!-- <text transform="matrix(1 0 0 1 207.7508 138.5189)" class="st1 st2 st9">NOVEMBER 2, 2024</text> -->
+                
                 <text transform="matrix(1 0 0 1 207.7508 138.5189)" class="st1 st2 st9"><?php echo $eventDate ?></text>
                 <text transform="matrix(1 0 0 1 290.1673 138.5186)" class="st1 st2 st9">SHARAD ARENA</text>
-                <!-- <text transform="matrix(1 0 0 1 356.3345 138.5187)" class="st1 st2 st9">3- 5 PM</text> -->
                 <text transform="matrix(1 0 0 1 356.3345 138.5187)" class="st1 st2 st9"><?php echo $eventTime ?></text>
                 <text transform="matrix(0 -0.7237 1 0 557.3142 194.3068)" class="stt1 st2 st10">TICKET ID :
                     <?php echo $finaluid?></text>
@@ -378,8 +362,9 @@ mysqli_close($conn);
     </div>
     <div class="container mt-xl-5 mt-lg-5 mt-md-4 mt-sm-4 pb-xl-5 text-center">
         <div class="row pt-xl-5 pb-xl-5 printelem">
-            <img src='https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=<?php echo "$validationtext" ?>&choe=UTF-8'
+            <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?php echo "$validationtext" ?>&charset-target=UTF-8&color=DB4A2B'
                 class="image-fluid mx-auto" alt="QR code">
+                
         </div>
     </div>
     <!-- ticket ends -->
@@ -391,7 +376,7 @@ mysqli_close($conn);
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
             © 2024
-            <a class="text-white">Built For WTCC</a>
+            <a class="text-white">Built For XYZ</a>
         </div>
         <!-- Copyright -->
     </footer>

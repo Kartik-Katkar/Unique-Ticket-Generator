@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="register.php">Register</a>
+                    <a class="nav-link" href="register.php">Events</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="login.php">Login</a>
@@ -154,10 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                         <span style="color: hsl(218, 81%, 75%)">For the Event</span>
                     </h1>
                     <h6 class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                    
-                     Get ready for an exciting CodeFlix Hackathon experience! Your personalized ticket is your key to a day packed with coding challenges, innovation, and networking. Keep it accessible on your mobile or in print.
-
-                     Spread the word among your fellow participants and use our official event hashtag #CodeFlixHackathon on social media. Let's make this event unforgettable! For any ticket-related issues or questions, reach out to our support team at [Support Email/Phone]. Enjoy the hackathon!
+                    A hackathon is a fast-paced event where teams collaborate to solve real-world problems through coding and creative problem-solving within a set timeframe. It fosters innovation, teamwork, and rapid iteration, leading to groundbreaking ideas and solutions with the potential to make a significant impact in various industries.
                     </h6>
                 </div>
 

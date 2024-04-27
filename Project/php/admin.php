@@ -71,11 +71,10 @@ function createEvent($conn, $name, $date, $time, $price) {
     }
 }
 
-// Function to update event details
 function updateEvent($conn, $eventId, $name, $date, $time, $price) {
     $sql = "UPDATE eventdata SET name = ?, date = ?, time = ?, price = ? WHERE id = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "sssii", $name, $date, $time, $price, $eventId);
+    mysqli_stmt_bind_param($stmt, "ssssi", $name, $date, $time, $price, $eventId);
     if (mysqli_stmt_execute($stmt)) {
         return true;
     } else {
@@ -98,7 +97,7 @@ function deleteEvent($conn, $eventId) {
 // Fetch all events
 function getAllEvents($conn) {
     $events = array();
-    $sql = "SELECT id, name FROM eventdata";
+    $sql = "SELECT id, name, date, time, price FROM eventdata"; // Include date, time, and price in the query
     $result = mysqli_query($conn, $sql);
     while ($row = mysqli_fetch_assoc($result)) {
         $events[] = $row;
@@ -106,14 +105,30 @@ function getAllEvents($conn) {
     return $events;
 }
 
+
 // Fetch all events
 $events = getAllEvents($conn);
 
 // Handle form submissions for events
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['create_event'])) {
-        // Code to create event (already present)
-    } elseif (isset($_POST['update_event'])) {
+        $eventName = $_POST['event_name'];
+        $eventDate = $_POST['event_date'];
+        $eventTime = $_POST['event_time'];
+        $eventPrice = $_POST['event_price'];
+        if (createEvent($conn, $eventName, $eventDate, $eventTime, $eventPrice)) {
+            // Event created successfully
+            header("Location: admin.php");
+            exit;
+        } else {
+            // Error creating event
+            $errorMessage = "Error creating event.";
+        }
+    }
+    
+    // Handle form submissions for events
+
+    if (isset($_POST['update_event'])) {
         $eventId = $_POST['event_id'];
         $eventName = $_POST['updated_event_name'];
         $eventDate = $_POST['updated_event_date'];
@@ -127,7 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Error updating event
             $errorMessage = "Error updating event.";
         }
-    } elseif (isset($_POST['delete_event'])) {
+    }
+
+     elseif (isset($_POST['delete_event'])) {
         $eventId = $_POST['event_id_delete'];
         if (deleteEvent($conn, $eventId)) {
             // Event deleted successfully
@@ -451,8 +468,59 @@ mysqli_free_result($result);
 </div>
 
 <div class="glassmorphism">
-    <h3>Update Event</h3>
-    <form method="post" action="">
+    <h3>Events Table</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>Event Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($events as $event) : ?>
+                <tr>
+                    <td><?php echo $event['id']; ?></td>
+                    <td><?php echo $event['name']; ?></td>
+                    <td><?php echo $event['date']; ?></td>
+                    <td><?php echo $event['time']; ?></td>
+                    <td><?php echo $event['price']; ?></td>
+                    <td>
+                        <!-- Update form -->
+                        <form method="post" action="">
+                            <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
+                            <!-- Update button -->
+<button type="button" class="btn btn-primary btn-sm" onclick="openUpdateEventModal(<?php echo $event['id']; ?>)">Update</button>
+
+                        </form>
+                        <!-- Delete form -->
+                        <form method="post" action="">
+                            <input type="hidden" name="event_id_delete" value="<?php echo $event['id']; ?>">
+                            <button type="submit" class="btn btn-danger btn-sm" name="delete_event">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Popup -->
+<div class="modal fade" id="updateEventModal" tabindex="-1" role="dialog" aria-labelledby="updateEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateEventModalLabel">Update Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for updating event -->
+        <form method="post" action="">
     <div class="form-group">
     <label for="event_id">Select Event:</label>
     <select class="form-control" id="event_id" name="event_id">
@@ -480,24 +548,25 @@ mysqli_free_result($result);
         </div>
         <button type="submit" class="btn btn-primary" name="update_event">Update Event</button>
     </form>
+      </div>
+    </div>
+  </div>
 </div>
 
+<script>
+    function openUpdateEventModal(eventId) {
+        $('#event_id').val(eventId); // Set the event ID in the hidden input field
+        $('#updateEventModal').modal('show'); // Show the modal popup
+    }
 
-<div class="glassmorphism">
-    <h3>Delete Event</h3>
-    <form method="post" action="">
-        <div class="form-group">
-            <label for="event_id_delete">Select Event:</label>
-            <select class="form-control" id="event_id_delete" name="event_id_delete">
-                <?php foreach ($events as $event) : ?>
-                    <option value="<?php echo $event['id']; ?>"><?php echo $event['name']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-danger" name="delete_event">Delete Event</button>
-    </form>
-    
-</div>
+    // Function to submit the form
+    function submitUpdateEventForm() {
+        $('#updateEventForm').submit(); // Submit the form
+    }
+</script>
+
+
+<!-- modal popup close  -->
 
 
         <?php if (isset($errorMessage)) : ?>
@@ -564,7 +633,7 @@ mysqli_free_result($result);
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
     // Replace "... with your actual API key from Google AI Studio
-    const API_KEY = "AIzaSyAumIRKhFyHl47hcBpBUn_4OnorT_nY0qo";
+    const API_KEY = "YOUR_API_KEY_HERE";
 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -591,7 +660,8 @@ mysqli_free_result($result);
       const result = await modelWithConfig.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      generatedText.innerText = text;
+      const textWithoutStars = text.replace(/\*/g, ' ');
+      generatedText.innerText = textWithoutStars;
     }
     generateText();
   </script>
@@ -815,7 +885,7 @@ var referralRegistrationChart = new Chart(ctx4, {
             <!-- Copyright -->
             <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
                 © 2024
-                <a class="text-white">Built For WTCC</a>
+                <a class="text-white">Built For XYZ</a>
             </div>
             <!-- Copyright -->
         </footer>
